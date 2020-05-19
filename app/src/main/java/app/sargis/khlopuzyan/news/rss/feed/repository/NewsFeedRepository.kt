@@ -9,23 +9,23 @@ import app.sargis.khlopuzyan.news.rss.feed.networking.helper.getResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 
-interface NewsRepository {
+interface NewsFeedRepository {
     suspend fun searchNews(): Result<News>
 }
 
 /**
- * Repository implementation for doing top albums search
+ * Repository implementation for doing news search
  */
-class NewsRepositoryImpl(
+class NewsFeedRepositoryImpl(
     private val apiService: ApiService,
     private val databaseManager: DatabaseManager,
     private val coroutineScope: CoroutineScope
-) : NewsRepository {
+) : NewsFeedRepository {
 
     override suspend fun searchNews(): Result<News> =
         withContext(coroutineScope.coroutineContext) {
             try {
-                return@withContext apiService.searchArtist()
+                return@withContext apiService.searchNews()
                     .getResult()
             } catch (ex: Exception) {
                 return@withContext Result.Failure(ex)

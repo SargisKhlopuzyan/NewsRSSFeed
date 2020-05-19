@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="app.sargis.khlopuzyan.news.rss.feed.ui.newsfeed.NewsFeedViewModel" />
+            type="app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed.NewsFeedViewModel" />
 
     </data>
 
@@ -13,7 +13,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.newsfeed.NewsFeedFragment">
+        tools:context=".ui.newsFeed.NewsFeedFragment">
 
         <TextView
             android:layout_width="match_parent"

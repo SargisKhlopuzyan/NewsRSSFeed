@@ -4,8 +4,8 @@ import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 
 interface NewsDetailsRepository {
-    fun saveNewsInCache(album: Item): Long
-    fun deleteNewsFromCache(album: Item): Int
+    fun saveNewsInCache(item: Item): Long
+    fun deleteNewsFromCache(item: Item): Int
 }
 
 /**
@@ -15,12 +15,12 @@ class NewsDetailsRepositoryImpl(
     private val databaseManager: DatabaseManager
 ) : NewsDetailsRepository {
 
-    override fun saveNewsInCache(album: Item): Long {
-        return databaseManager.saveNewsInDatabase(album)
+    override fun saveNewsInCache(item: Item): Long {
+        return databaseManager.saveNewsInDatabase(item)
     }
 
-    override fun deleteNewsFromCache(album: Item): Int {
-        return databaseManager.deleteNewsFromDatabase(album)
+    override fun deleteNewsFromCache(item: Item): Int {
+        return databaseManager.deleteNewsFromDatabase(item)
     }
 
 }

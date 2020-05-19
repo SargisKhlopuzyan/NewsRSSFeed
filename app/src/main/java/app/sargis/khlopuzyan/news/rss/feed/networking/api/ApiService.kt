@@ -7,7 +7,7 @@ import retrofit2.http.GET
 interface ApiService {
 
     @GET("?")
-    suspend fun searchArtist(
+    suspend fun searchNews(
 //        @Query(value = "format") format: String = "json"
     ): Response<News>
 

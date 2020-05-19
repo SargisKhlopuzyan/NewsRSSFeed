@@ -67,11 +67,11 @@ abstract class AppModule {
 
         @Provides
         @Singleton
-        fun provideTopAlbumsRepository(
+        fun provideNewsFeedRepository(
             apiService: ApiService,
             databaseManager: DatabaseManager
-        ): NewsRepository =
-            NewsRepositoryImpl(
+        ): NewsFeedRepository =
+            NewsFeedRepositoryImpl(
                 apiService,
                 databaseManager,
                 CoroutineScope(Job() + Dispatchers.IO)

@@ -16,7 +16,7 @@ import javax.inject.Singleton
         AppModule::class,
         ArchiveModule::class,
         NewsDetailsModule::class,
-        NewsModule::class
+        NewsFeedModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

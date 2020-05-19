@@ -23,14 +23,14 @@ interface ArchiveModule {
         @IntoMap
         @ViewModelKey(ArchiveViewModel::class)
         fun provideMainViewModel(
-            cachedAlbumsRepository: ArchiveRepository
-        ): ViewModel = ArchiveViewModel(cachedAlbumsRepository)
+            archiveRepository: ArchiveRepository
+        ): ViewModel = ArchiveViewModel(archiveRepository)
     }
 
     @Module
     class InjectViewModel {
         @Provides
-        fun provideCachedAlbumsViewModel(
+        fun provideArchiveViewModel(
             factory: ViewModelProvider.Factory,
             target: ArchiveFragment
         ) = ViewModelProvider(target, factory)[ArchiveViewModel::class.java]

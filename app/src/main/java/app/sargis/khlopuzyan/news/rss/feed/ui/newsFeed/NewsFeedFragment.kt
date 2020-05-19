@@ -1,4 +1,4 @@
-package app.sargis.khlopuzyan.news.rss.feed.ui.newsfeed
+package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 
 import app.sargis.khlopuzyan.news.rss.feed.R
-import app.sargis.khlopuzyan.news.rss.feed.databinding.FragmentNewsFeedBinding
+import app.sargis.khlopuzyan.news.rss.feed.databinding.FragmentNewsfeedBinding
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.DaggerFragmentX
 import javax.inject.Inject
 
@@ -25,9 +25,9 @@ class NewsFeedFragment : DaggerFragmentX() {
     }
 
     @Inject
-    lateinit var feedViewModel: NewsFeedViewModel
+    lateinit var newsFeedViewModel: NewsFeedViewModel
 
-    private lateinit var binding: FragmentNewsFeedBinding
+    private lateinit var binding: FragmentNewsfeedBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class NewsFeedFragment : DaggerFragmentX() {
     ): View? {
 
         binding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_news_feed, container, false)
+            DataBindingUtil.inflate(inflater, R.layout.fragment_newsfeed, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
@@ -50,7 +50,7 @@ class NewsFeedFragment : DaggerFragmentX() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.viewModel = feedViewModel
+        binding.viewModel = newsFeedViewModel
     }
 
 }
