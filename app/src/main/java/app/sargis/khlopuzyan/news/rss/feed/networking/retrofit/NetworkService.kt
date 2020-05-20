@@ -12,7 +12,8 @@ class NetworkService {
 
     companion object {
 
-        private const val BASE_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://news.am/eng/rss/"
+        private const val BASE_URL = "https://api.rss2json.com"
+//        private const val BASE_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://news.am/eng/rss/"
 //        private const val BASE_URL = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.am%2Feng%2Frss%2F"
 
         fun initOkHttpClient(): OkHttpClient {

@@ -22,7 +22,7 @@ interface ArchiveModule {
         @Provides
         @IntoMap
         @ViewModelKey(ArchiveViewModel::class)
-        fun provideMainViewModel(
+        fun provideArchiveViewModel(
             archiveRepository: ArchiveRepository
         ): ViewModel = ArchiveViewModel(archiveRepository)
     }

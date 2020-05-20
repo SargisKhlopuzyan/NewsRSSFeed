@@ -58,15 +58,6 @@ abstract class AppModule {
 
         @Provides
         @Singleton
-        fun provideArchiveRepository(
-            databaseManager: DatabaseManager
-        ): ArchiveRepository =
-            ArchiveRepositoryImpl(
-                databaseManager
-            )
-
-        @Provides
-        @Singleton
         fun provideNewsFeedRepository(
             apiService: ApiService,
             databaseManager: DatabaseManager
@@ -75,6 +66,15 @@ abstract class AppModule {
                 apiService,
                 databaseManager,
                 CoroutineScope(Job() + Dispatchers.IO)
+            )
+
+        @Provides
+        @Singleton
+        fun provideArchiveRepository(
+            databaseManager: DatabaseManager
+        ): ArchiveRepository =
+            ArchiveRepositoryImpl(
+                databaseManager
             )
 
         @Provides
