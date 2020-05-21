@@ -5,6 +5,7 @@ import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
@@ -12,9 +13,11 @@ class NetworkService {
 
     companion object {
 
-        private const val BASE_URL = "https://api.rss2json.com"
-//        private const val BASE_URL = "https://api.rss2json.com/v1/api.json?rss_url=https://news.am/eng/rss/"
+        //        private const val BASE_URL = "https://api.rss2json.com"
+//        private const val BASE_URL = "https://api.rss2json.com/v1/api.json"
+//        private const val BASE_URL = "https://rss2json.com/#rss_url=https%3A%2F%2Fnews.am%2Feng%2Frss%2F"
 //        private const val BASE_URL = "https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.am%2Feng%2Frss%2F"
+        private const val BASE_URL = "https://api.rss2json.com/v1/"
 
         fun initOkHttpClient(): OkHttpClient {
             return OkHttpClient.Builder().apply {
@@ -34,12 +37,13 @@ class NetworkService {
             Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(BASE_URL)
-                .addConverterFactory(
-                    MoshiConverterFactory.create(
-                        Moshi.Builder()
-                            .build()
-                    )
-                )
+                .addConverterFactory(GsonConverterFactory.create())
+//                .addConverterFactory(
+//                    MoshiConverterFactory.create(
+//                        Moshi.Builder()
+//                            .build()
+//                    )
+//                )
                 .build()
     }
 

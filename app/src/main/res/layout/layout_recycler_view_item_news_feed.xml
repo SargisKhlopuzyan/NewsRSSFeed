@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="app.sargis.khlopuzyan.news.rss.feed.model.Item" />
+
+        <variable
+            name="viewModel"
+            type="app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed.NewsFeedViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> viewModel.onItemClick(item)}"
+        android:paddingVertical="2dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="8dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:layout_constraintEnd_toStartOf="@+id/textViewTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setImageResource="@{item.thumbnail ?? ``}"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{item.title}"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/sizeTextSmall"
+            app:layout_constraintBottom_toTopOf="@+id/textViewDate"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/lottieAnimationView"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:text="@{item.pubDate}"
+            app:layout_constraintBottom_toTopOf="@+id/textViewContent"
+            app:layout_constraintEnd_toEndOf="@+id/textViewTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+            tools:text="Date" />
+
+        <TextView
+            android:id="@+id/textViewContent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@{item.content}"
+            android:textColor="@color/colorText"
+            android:textSize="@dimen/sizeTextSmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/textViewTitle"
+            app:layout_constraintStart_toStartOf="@+id/textViewTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDate"
+            tools:text="Content" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieAnimationView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:onClick="@{() -> viewModel.onCachingActionClick(item)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            app:setItemCacheState="@{item}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

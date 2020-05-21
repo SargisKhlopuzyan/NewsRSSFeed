@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -15,10 +15,11 @@
         android:layout_height="match_parent"
         tools:context=".ui.newsDetails.NewsDetailsFragment">
 
-        <TextView
+        <WebView
+            android:id="@+id/webView"
+            app:loadUrl="@{viewModel.itemLiveData}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello" />
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 

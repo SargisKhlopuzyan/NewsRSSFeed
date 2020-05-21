@@ -1,8 +1,8 @@
 package app.sargis.khlopuzyan.news.rss.feed
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import app.sargis.khlopuzyan.news.rss.feed.ui.main.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -11,17 +11,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
 
-        Log.e("LOG_TAG", "onCreate 1")
-
         if (savedInstanceState == null) {
-
-            Log.e("LOG_TAG", "onCreate 2")
-
-            supportFragmentManager.beginTransaction().add(
-                android.R.id.content,
-                MainFragment.newInstance(),
-                "fragment_main"
-            ).commit()
+            supportFragmentManager.commit {
+                replace(
+                    android.R.id.content,
+                    MainFragment.newInstance(),
+                    "fragment_main"
+                )
+            }
         }
     }
 

@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import app.sargis.khlopuzyan.news.rss.feed.database.converter.CacheStateConverter
 import app.sargis.khlopuzyan.news.rss.feed.database.converter.CategoriesConverter
 import app.sargis.khlopuzyan.news.rss.feed.database.converter.EnclosureConverter
 import app.sargis.khlopuzyan.news.rss.feed.database.dao.NewsDAO
@@ -12,7 +13,8 @@ import app.sargis.khlopuzyan.news.rss.feed.model.Item
 
 @TypeConverters(
     EnclosureConverter::class,
-    CategoriesConverter::class
+    CategoriesConverter::class,
+    CacheStateConverter::class
 )
 @Database(entities = [Item::class], version = 1, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase() {

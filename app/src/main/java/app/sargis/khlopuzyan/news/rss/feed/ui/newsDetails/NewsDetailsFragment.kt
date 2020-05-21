@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 
 import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.databinding.FragmentNewsDetailsBinding
+import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.DaggerFragmentX
 import javax.inject.Inject
 
@@ -15,11 +16,11 @@ class NewsDetailsFragment : DaggerFragmentX() {
 
     companion object {
 
-        private const val ARG_X = "arg_x"
+        private const val ARG_ITEM = "arg_item"
 
-        fun newInstance(/*album: Album*/) = NewsDetailsFragment().apply {
+        fun newInstance(item: Item) = NewsDetailsFragment().apply {
             arguments = Bundle().apply {
-//                putParcelable(ARG_X, album)
+                putParcelable(ARG_ITEM, item)
             }
         }
     }
@@ -32,8 +33,10 @@ class NewsDetailsFragment : DaggerFragmentX() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val album: Album? = arguments?.getParcelable(ARG_ALBUM)
-//        viewModel.setAlbum(album)
+        val item: Item? = arguments?.getParcelable(ARG_ITEM)
+        item?.let {
+            viewModel.setItem(it)
+        }
     }
 
     override fun onCreateView(
