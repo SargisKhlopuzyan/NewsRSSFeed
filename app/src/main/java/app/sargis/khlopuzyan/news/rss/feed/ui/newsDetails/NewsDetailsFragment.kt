@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import androidx.databinding.DataBindingUtil
-
 import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.databinding.FragmentNewsDetailsBinding
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.DaggerFragmentX
 import javax.inject.Inject
+
 
 class NewsDetailsFragment : DaggerFragmentX() {
 
@@ -47,6 +48,11 @@ class NewsDetailsFragment : DaggerFragmentX() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_news_details, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
+
+        // Enable javascript
+        binding.webView.settings.javaScriptEnabled = true
+        binding.webView.webViewClient = WebViewClient()
+
 
         return binding.root
     }

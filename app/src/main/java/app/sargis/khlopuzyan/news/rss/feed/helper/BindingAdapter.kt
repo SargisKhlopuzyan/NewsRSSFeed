@@ -41,7 +41,7 @@ fun <T> RecyclerView.setDataLoadingState(dataLoadingState: DataLoadingState?) {
 
 @BindingAdapter("loadUrl")
 fun WebView.loadUrl(item: Item?) {
-    this.loadUrl(item?.link)
+    this.loadUrl(item?.guid)
 }
 
 @BindingAdapter("content")
