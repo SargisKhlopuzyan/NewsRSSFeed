@@ -1,6 +1,7 @@
 package app.sargis.khlopuzyan.news.rss.feed
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commit
 import app.sargis.khlopuzyan.news.rss.feed.ui.main.MainFragment
@@ -10,6 +11,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
+
+        Log.e("LOG_TAG", "MainActivity -> onCreate")
 
         if (savedInstanceState == null) {
             supportFragmentManager.commit {

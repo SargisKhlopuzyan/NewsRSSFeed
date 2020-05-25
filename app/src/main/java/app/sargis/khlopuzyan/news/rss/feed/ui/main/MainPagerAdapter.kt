@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.main
 
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -8,6 +9,10 @@ import app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed.NewsFeedFragment
 
 class MainPagerAdapter(fragmentManager: FragmentManager) :
     FragmentStatePagerAdapter(fragmentManager) {
+
+    init {
+        Log.e("LOG_TAG", "MainPagerAdapter-> ******* init")
+    }
 
     override fun getItem(position: Int): Fragment {
         return when (position) {

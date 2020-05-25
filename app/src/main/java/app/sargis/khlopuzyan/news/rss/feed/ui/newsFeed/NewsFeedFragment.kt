@@ -25,7 +25,7 @@ class NewsFeedFragment : DaggerFragmentX() {
 
         fun newInstance() = NewsFeedFragment().apply {
             arguments = Bundle().apply {
-                Log.e("LOG_TAG", "NewsFeedFragment -> newInstance")
+                Log.e("LOG_TAG_1", "NewsFeedFragment -> newInstance")
             }
         }
     }
@@ -35,23 +35,32 @@ class NewsFeedFragment : DaggerFragmentX() {
 
     private lateinit var binding: FragmentNewsfeedBinding
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.e("LOG_TAG_1", "NewsFeedFragment -> onCreate")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Log.e("LOG_TAG_1", "NewsFeedFragment -> onCreateView")
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_newsfeed, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        Log.e("LOG_TAG", "NewsFeedFragment -> onCreateView")
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.e("LOG_TAG_1", "NewsFeedFragment -> onViewCreated")
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
 
-        Log.e("LOG_TAG", "NewsFeedFragment -> onActivityCreated")
+        Log.e("LOG_TAG_1", "NewsFeedFragment -> onActivityCreated")
 
         setupRecyclerView()
         setupObservers()
@@ -65,7 +74,7 @@ class NewsFeedFragment : DaggerFragmentX() {
         val adapter = NewsFeedAdapter(
             viewModel
         )
-        adapter.setHasStableIds(true)
+//        adapter.setHasStableIds(true)
         binding.recyclerView.adapter = adapter
     }
 

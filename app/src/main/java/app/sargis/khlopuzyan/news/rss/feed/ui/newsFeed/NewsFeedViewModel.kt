@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,7 @@ class NewsFeedViewModel constructor(
     val errorMessageLiveData = MutableLiveData<String>()
 
     init {
+        Log.e("LOG_TAG", "NewsFeedViewModel -> init")
         searchMoreNews()
     }
 
@@ -122,6 +124,7 @@ class NewsFeedViewModel constructor(
             setNewsCachingState(item, index, CacheState.InProcess)
             newsFeedRepository.saveNewsInCache(item)
             setNewsCachingState(item, index, CacheState.Cached)
+
         }
     }
 

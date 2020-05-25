@@ -41,7 +41,13 @@ fun <T> RecyclerView.setDataLoadingState(dataLoadingState: DataLoadingState?) {
 
 @BindingAdapter("loadUrl")
 fun WebView.loadUrl(item: Item?) {
-    this.loadUrl(item?.link);
+    this.loadUrl(item?.link)
+}
+
+@BindingAdapter("content")
+fun TextView.setContent(item: Item?) {
+    val content = item?.content?.substringBefore("<div class=")
+    this.text = content
 }
 
 @BindingAdapter("setImageResource")

@@ -8,11 +8,22 @@ import app.sargis.khlopuzyan.news.rss.feed.networking.api.ApiService
 import app.sargis.khlopuzyan.news.rss.feed.networking.callback.Result
 import app.sargis.khlopuzyan.news.rss.feed.networking.helper.getResult
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable.isCancelled
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 interface NewsFeedRepository {
 
     suspend fun searchNewsFeed(): Result<NewsFeed>
+
+    suspend fun cacheNewsDetail(): Boolean
 
     suspend fun saveNewsInCache(item: Item): Long
 
@@ -38,6 +49,50 @@ class NewsFeedRepositoryImpl(
                 return@withContext Result.Failure(ex)
             }
         }
+
+    override suspend fun cacheNewsDetail(): Boolean {
+        // TODO
+        return true
+    }
+
+
+    suspend fun downloadFile(url: String, downloadFile: File, downloadProgressFun: (bytesRead: Long, contentLength: Long, isDone: Boolean) -> Unit) {
+
+//        async(CommonPool) {
+//
+//            val request = with(Request.Builder()) {
+//                url(url)
+//            }.build()
+//
+//            val client = with(OkHttpClient.Builder()) {
+//                addNetworkInterceptor { chain ->
+//                    val originalResponse = chain.proceed(chain.request())
+//                    val responseBody = originalResponse.body
+//
+//                    responseBody?.let {
+//                        originalResponse.newBuilder().body(ProgressResponseBody(it, downloadProgressFun)).build()
+//                    }
+//
+//
+//                }
+//            }.build()
+//
+//            try {
+//                val execute = client.newCall(request).execute()
+//                val outputStream = FileOutputStream(downloadFile)
+//
+//                val body = execute.body
+//                body?.let {
+//                    with(outputStream) {
+//                        write(body.bytes())
+//                        close()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//            }
+//        }
+    }
 
     override suspend fun saveNewsInCache(item: Item): Long {
         return databaseManager.saveNewsInDatabase(item)

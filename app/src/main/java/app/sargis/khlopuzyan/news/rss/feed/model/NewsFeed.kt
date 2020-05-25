@@ -12,13 +12,14 @@ import kotlinx.android.parcel.Parcelize
 data class NewsFeed(
 
     @Json(name = "feed")
-    val feed: Feed? = null,
+    val feed: Feed,
 
     @Json(name = "items")
-    val items: List<Item>? = null,
+    val items: List<Item>,
 
     @Json(name = "status")
-    val status: String? = null
+    val status: String
+
 )
 
 @JsonClass(generateAdapter = true)
@@ -90,6 +91,12 @@ data class Item(
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-class Enclosure(
+data class Enclosure(
+
+    @Json(name = "link")
+    val link: String? = null,
+
+    @Json(name = "type")
+    val type: String? = null
 
 ) : Parcelable
