@@ -25,7 +25,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="150dp"
-            android:layout_height="84dp"
+            android:layout_height="85dp"
             app:layout_constraintBottom_toTopOf="@+id/textViewContent"
             app:layout_constraintEnd_toStartOf="@+id/textViewTitle"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="4dp"
             android:ellipsize="end"
-            android:maxLines="4"
+            android:maxLines="3"
             android:text="@{item.title}"
             android:textColor="@color/colorText"
             android:textSize="@dimen/sizeTextSmall"
@@ -54,14 +54,14 @@
             android:id="@+id/textViewDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="4dp"
+            android:layout_marginVertical="1dp"
             android:text="@{item.pubDate}"
-            app:layout_constraintBottom_toTopOf="@+id/textViewContent"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintEnd_toEndOf="@+id/textViewTitle"
             app:layout_constraintStart_toStartOf="@+id/textViewTitle"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_weight="0.0"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:layout_constraintVertical_weight="1.0"
             tools:text="Date" />
 
         <com.airbnb.lottie.LottieAnimationView
@@ -88,8 +88,8 @@
             app:content="@{item}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewDate"
             tools:text="Content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
