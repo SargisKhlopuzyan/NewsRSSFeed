@@ -17,7 +17,7 @@
 
         <WebView
             android:id="@+id/webView"
-            app:loadUrl="@{viewModel.itemLiveData}"
+            app:loadDataFromCacheOrUrl="@{viewModel.itemLiveData}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

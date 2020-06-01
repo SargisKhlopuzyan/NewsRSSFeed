@@ -26,7 +26,6 @@ class NewsFeedViewModel constructor(
     val errorMessageLiveData = MutableLiveData<String>()
 
     init {
-        Log.e("LOG_TAG", "NewsFeedViewModel -> init")
         searchMoreNews()
     }
 
@@ -46,7 +45,7 @@ class NewsFeedViewModel constructor(
     }
 
     /**
-     * Handles artist list item click
+     * Handles rss list item click
      * */
     fun onItemClick(item: Item?) {
         item?.let {
@@ -120,9 +119,26 @@ class NewsFeedViewModel constructor(
      * */
     private fun saveItemInCache(item: Item) {
         viewModelScope.launch {
-            val index: Int = newsFeedLiveData.value?.indexOf(item)!!
+
+            var index: Int = -1
+
+            val pref = { _index: Int, _item: Item ->
+                if (_item.guid.equals(item.guid)) {
+                    index = _index
+                }
+                _item.guid.equals(item.guid)
+            }
+
+            newsFeedLiveData.value?.let {
+                it.filterIndexed(pref)
+            }
+
             setNewsCachingState(item, index, CacheState.InProcess)
-            newsFeedRepository.saveNewsInCache(item)
+
+            //TODO
+            val cachedFileName = newsFeedRepository.cacheNewsDetail(item)
+//            newsFeedRepository.saveNewsInCache(item)
+
             setNewsCachingState(item, index, CacheState.Cached)
 
         }
@@ -152,14 +168,13 @@ class NewsFeedViewModel constructor(
      * @param cacheState cache state
      * */
     private fun setNewsCachingState(item: Item, index: Int, cacheState: CacheState) {
-
         val newItem = item.copy(cacheState = cacheState)
         val newItems: MutableList<Item> = mutableListOf()
-
         newItems.addAll(newsFeedLiveData.value!!)
         newItems[index] = newItem
-
         newsFeedLiveData.value = newItems
     }
 
+//    1561984094
+//    87c9xf
 }

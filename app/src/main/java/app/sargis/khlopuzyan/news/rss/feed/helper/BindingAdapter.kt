@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.BindableAdapter
+import app.sargis.khlopuzyan.news.rss.feed.util.CacheManager
 import app.sargis.khlopuzyan.news.rss.feed.util.CacheState
 import app.sargis.khlopuzyan.news.rss.feed.util.DataLoadingState
 import com.airbnb.lottie.LottieAnimationView
@@ -39,9 +40,18 @@ fun <T> RecyclerView.setDataLoadingState(dataLoadingState: DataLoadingState?) {
     }
 }
 
-@BindingAdapter("loadUrl")
-fun WebView.loadUrl(item: Item?) {
-    this.loadUrl(item?.guid)
+@BindingAdapter("loadDataFromCacheOrUrl")
+fun WebView.loadDataFromCacheOrUrl(item: Item?) {
+    val cache = CacheManager.readFileContentFromInternalStorage(item?.guid)
+
+    if (cache.isNullOrEmpty()) {
+        this.loadUrl(item?.guid)
+    } else {
+        this.settings.javaScriptEnabled = true
+        this.loadDataWithBaseURL(null, cache, "text/html", "utf-8", null)
+//        this.loadData(cache, "text/html", "utf-8")
+    }
+
 }
 
 @BindingAdapter("content")
@@ -100,7 +110,7 @@ fun LottieAnimationView.setItemCacheState(item: Item?) {
 
         CacheState.Cached -> {
             repeatCount = LottieDrawable.INFINITE
-            setImageResource(R.drawable.ic_favorite_checked)
+            setImageResource(R.drawable.ic_saved)
         }
 
         CacheState.InProcess -> {
@@ -111,7 +121,7 @@ fun LottieAnimationView.setItemCacheState(item: Item?) {
 
         CacheState.NotCached -> {
             repeatCount = LottieDrawable.INFINITE
-            setImageResource(R.drawable.ic_favorite_unchecked)
+            setImageResource(R.drawable.ic_save)
         }
     }
 }

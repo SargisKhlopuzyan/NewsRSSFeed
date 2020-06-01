@@ -12,6 +12,7 @@ class NewsDetailsViewModel constructor(
     val itemLiveData = MutableLiveData<Item>()
 
     fun setItem(item: Item) {
+//        val cache = newsDetailsRepository.loadNewsFromCache(item)
         itemLiveData.value = item
     }
 

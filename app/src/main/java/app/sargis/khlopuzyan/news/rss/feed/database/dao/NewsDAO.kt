@@ -19,8 +19,8 @@ interface NewsDAO {
     @Query("SELECT * FROM items WHERE guid = :id")
     fun getNewsById(id: String?): Item?
 
-//    @Query("SELECT * FROM items WHERE artist LIKE :artistName")
-//    fun getAllArchiveNews(artistName: String?): List<Item>
+//    @Query("SELECT * FROM items WHERE guid LIKE :guid")
+//    fun getAllArchiveNews(guid: String?): List<RssItem>
 
     @Query("SELECT * FROM items")
     fun getAllArchiveNews(): List<Item>

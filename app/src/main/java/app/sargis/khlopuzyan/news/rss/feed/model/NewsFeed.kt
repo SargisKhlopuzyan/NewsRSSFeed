@@ -66,7 +66,7 @@ data class Item(
     val content: String? = null,
 
     @Json(name = "description")
-    val description: String? = null,
+    var description: String? = null,
 
     // TODO Uncomment
     @Json(name = "enclosure")
@@ -76,16 +76,16 @@ data class Item(
     val guid: String? = null,
 
     @Json(name = "link")
-    val link: String? = null,
+    var link: String? = null,
 
     @Json(name = "pubDate")
-    val pubDate: String? = null,
+    var pubDate: String? = null,
 
     @Json(name = "thumbnail")
     val thumbnail: String? = null,
 
     @Json(name = "title")
-    val title: String? = null
+    var title: String? = null
 
 ) : Parcelable
 

@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed
 
+import android.content.Context
 import app.sargis.khlopuzyan.news.rss.feed.di.component.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
@@ -13,8 +14,16 @@ class App : DaggerApplication() {
         }
     }
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> = DaggerAppComponent
-        .factory()
-        .create(this)
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        context = this
+        return DaggerAppComponent
+            .factory()
+            .create(this)
+    }
+
+    companion object {
+        private lateinit var context: Context
+        fun getContext() = context
+    }
 
 }

@@ -31,4 +31,8 @@ class DatabaseManager @Inject constructor(var context: Context) {
         return NewsDatabase.getInstance(context).getNewsDAO().getAllArchiveNewsLiveData()
     }
 
+    fun loadNewsFromDatabase(item: Item) {
+
+    }
+
 }

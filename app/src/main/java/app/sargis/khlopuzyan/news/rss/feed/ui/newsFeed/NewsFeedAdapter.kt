@@ -167,7 +167,7 @@ class NewsFeedAdapter(
 class DiffCallback : DiffUtil.ItemCallback<Item?>() {
 
     override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-        return oldItem.guid == newItem.guid
+        return oldItem === newItem && oldItem.guid == newItem.guid && oldItem.cacheState == newItem.cacheState
     }
 
     override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {

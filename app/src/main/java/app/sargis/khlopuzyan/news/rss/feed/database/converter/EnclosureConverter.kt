@@ -10,7 +10,7 @@ class EnclosureConverter {
     private val gson = Gson()
 
     @TypeConverter
-    fun stringToArtist(data: String?): Enclosure {
+    fun stringToEnclosure(data: String?): Enclosure {
 
         if (data == null) {
             return Enclosure()

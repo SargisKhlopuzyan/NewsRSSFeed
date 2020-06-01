@@ -50,7 +50,7 @@ class NewsDetailsFragment : DaggerFragmentX() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         // Enable javascript
-        binding.webView.settings.javaScriptEnabled = true
+//        binding.webView.settings.javaScriptEnabled = true
         binding.webView.webViewClient = WebViewClient()
 
 
