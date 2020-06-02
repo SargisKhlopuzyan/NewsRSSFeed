@@ -1,6 +1,5 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -119,28 +118,15 @@ class NewsFeedViewModel constructor(
      * */
     private fun saveItemInCache(item: Item) {
         viewModelScope.launch {
-
-            var index: Int = -1
-
-            val pref = { _index: Int, _item: Item ->
-                if (_item.guid.equals(item.guid)) {
-                    index = _index
-                }
-                _item.guid.equals(item.guid)
-            }
-
-            newsFeedLiveData.value?.let {
-                it.filterIndexed(pref)
-            }
-
+            val index: Int = newsFeedLiveData.value!!.indexOf(item)
             setNewsCachingState(item, index, CacheState.InProcess)
 
-            //TODO
-            val cachedFileName = newsFeedRepository.cacheNewsDetail(item)
-//            newsFeedRepository.saveNewsInCache(item)
-
-            setNewsCachingState(item, index, CacheState.Cached)
-
+            val id = newsFeedRepository.saveNewsInCache(item)
+            if (id == -1L) {
+                setNewsCachingState(item, index, CacheState.NotCached)
+            } else {
+                setNewsCachingState(item, index, CacheState.Cached)
+            }
         }
     }
 
@@ -150,11 +136,10 @@ class NewsFeedViewModel constructor(
      * @param item news to delete from cache
      * */
     private fun deleteNewsFromCache(item: Item) {
-
         viewModelScope.launch {
             val index: Int = newsFeedLiveData.value?.indexOf(item)!!
             setNewsCachingState(item, index, CacheState.InProcess)
-            newsFeedRepository.deleteTopItemFromCache(item)
+            newsFeedRepository.deleteNewsFromCache(item)
             setNewsCachingState(item, index, CacheState.NotCached)
         }
     }
@@ -175,6 +160,4 @@ class NewsFeedViewModel constructor(
         newsFeedLiveData.value = newItems
     }
 
-//    1561984094
-//    87c9xf
 }

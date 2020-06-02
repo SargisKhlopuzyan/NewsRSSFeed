@@ -5,9 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.commit
+import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
 import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.databinding.FragmentArchiveBinding
+import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.DaggerFragmentX
+import app.sargis.khlopuzyan.news.rss.feed.ui.newsDetails.NewsDetailsFragment
 import javax.inject.Inject
 
 class ArchiveFragment : DaggerFragmentX() {
@@ -49,6 +54,39 @@ class ArchiveFragment : DaggerFragmentX() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.viewModel = viewModel
+
+        setupRecyclerView()
+        setupObservers()
+    }
+
+    private fun setupRecyclerView() {
+        val layoutManager = LinearLayoutManager(context)
+
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.hasFixedSize()
+        val adapter = ArchiveAdapter(
+            viewModel
+        )
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun setupObservers() {
+        viewModel.openNewsDetailLiveData.observe(viewLifecycleOwner) {
+            openNewsDetailFragment(it)
+        }
+    }
+
+    private fun openNewsDetailFragment(
+        item: Item
+    ) {
+        activity?.supportFragmentManager?.commit {
+            replace(
+                android.R.id.content,
+                NewsDetailsFragment.newInstance(item),
+                "fragment_news_details"
+            )
+            addToBackStack("news_details")
+        }
     }
 
 }

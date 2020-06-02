@@ -5,7 +5,10 @@ import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 
 interface ArchiveRepository {
-    fun getAllCachedNewsLiveData(): LiveData<List<Item>?>
+
+    fun getAllArchiveNewsLiveData(): LiveData<List<Item>?>
+
+    suspend fun deleteNewsFromCache(item: Item): Int
 }
 
 /**
@@ -15,8 +18,11 @@ class ArchiveRepositoryImpl(
     private val databaseManager: DatabaseManager
 ) : ArchiveRepository {
 
-    override fun getAllCachedNewsLiveData(): LiveData<List<Item>?> {
+    override fun getAllArchiveNewsLiveData(): LiveData<List<Item>?> {
         return databaseManager.getAllArchiveNewsLiveDataFromDatabase()
     }
+
+    override suspend fun deleteNewsFromCache(item: Item): Int =
+        databaseManager.deleteNewsFromDatabase(item)
 
 }
