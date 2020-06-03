@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,7 +40,6 @@ class NewsFeedViewModel constructor(
             items = newsFeedLiveData.value
             items?.addAll(newsFeed.items)
         }
-
         newsFeedLiveData.value = items
     }
 
@@ -56,6 +56,9 @@ class NewsFeedViewModel constructor(
      * Handles caching icon click
      * */
     fun onCachingActionClick(item: Item?) {
+
+        Log.e("LOG_TAG", "onCachingActionClick: ${item?.cacheState}")
+
         when (item?.cacheState) {
             CacheState.NotCached -> {
                 saveItemInCache(item)
@@ -76,7 +79,6 @@ class NewsFeedViewModel constructor(
     }
 
     fun searchMoreNews() {
-
         viewModelScope.launch(Dispatchers.Main) {
 
             dataLoadingStateLiveData.value = DataLoadingState.Loading
@@ -117,15 +119,19 @@ class NewsFeedViewModel constructor(
      * @param item item to save in cache
      * */
     private fun saveItemInCache(item: Item) {
-        viewModelScope.launch {
-            val index: Int = newsFeedLiveData.value!!.indexOf(item)
-            setNewsCachingState(item, index, CacheState.InProcess)
 
+        val index: Int = newsFeedLiveData.value!!.indexOf(item)
+        setNewsCachingState(item, index, CacheState.InProcess)
+
+        viewModelScope.launch(Dispatchers.IO) {
             val id = newsFeedRepository.saveNewsInCache(item)
-            if (id == -1L) {
-                setNewsCachingState(item, index, CacheState.NotCached)
-            } else {
-                setNewsCachingState(item, index, CacheState.Cached)
+
+            viewModelScope.launch(Dispatchers.Main) {
+                if (id == -1L) {
+                    setNewsCachingState(item, index, CacheState.NotCached)
+                } else {
+                    setNewsCachingState(item, index, CacheState.Cached)
+                }
             }
         }
     }
@@ -137,10 +143,12 @@ class NewsFeedViewModel constructor(
      * */
     private fun deleteNewsFromCache(item: Item) {
         viewModelScope.launch {
-            val index: Int = newsFeedLiveData.value?.indexOf(item)!!
-            setNewsCachingState(item, index, CacheState.InProcess)
-            newsFeedRepository.deleteNewsFromCache(item)
-            setNewsCachingState(item, index, CacheState.NotCached)
+            val index: Int = newsFeedLiveData.value?.indexOf(item) ?: -1
+            if (index != -1) {
+                setNewsCachingState(item, index, CacheState.InProcess)
+                newsFeedRepository.deleteNewsFromCache(item)
+                setNewsCachingState(item, index, CacheState.NotCached)
+            }
         }
     }
 

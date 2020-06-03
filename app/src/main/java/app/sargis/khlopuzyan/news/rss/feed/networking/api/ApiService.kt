@@ -12,4 +12,9 @@ interface ApiService {
         @Query(value = "rss_url") rss_url: String = "http://rss.cnn.com/rss/cnn_latest.rss"
     ): Response<NewsFeed>
 
+//    @GET("api.json?")
+//    suspend fun searchNewsDetails(
+//        @Query(value = "rss_details_url") rss_url: String = "http://rss.cnn.com/rss/cnn_latest.rss"
+//    ): Response<NewsFeed>
+
 }

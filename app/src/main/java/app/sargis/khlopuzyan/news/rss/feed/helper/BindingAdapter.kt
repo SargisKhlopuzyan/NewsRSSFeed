@@ -2,6 +2,7 @@ package app.sargis.khlopuzyan.news.rss.feed.helper
 
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.Log
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
@@ -107,19 +108,19 @@ fun ImageView.setImageResource(resource: String?) {
 @BindingAdapter("setItemCacheState")
 fun LottieAnimationView.setItemCacheState(item: Item?) {
     when (item?.cacheState) {
-
         CacheState.Cached -> {
+            Log.e("LOG_TAG", "CacheState.Cached")
             repeatCount = LottieDrawable.INFINITE
             setImageResource(R.drawable.ic_saved)
         }
-
         CacheState.InProcess -> {
+            Log.e("LOG_TAG", "CacheState.InProcess")
             repeatCount = LottieDrawable.RESTART
             setAnimation("loading.json")
             playAnimation()
         }
-
         CacheState.NotCached -> {
+            Log.e("LOG_TAG", "CacheState.NotCached")
             repeatCount = LottieDrawable.INFINITE
             setImageResource(R.drawable.ic_save)
         }

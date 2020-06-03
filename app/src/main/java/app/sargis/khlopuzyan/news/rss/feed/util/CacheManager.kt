@@ -2,6 +2,7 @@ package app.sargis.khlopuzyan.news.rss.feed.util
 
 import android.content.Context
 import android.os.StrictMode
+import android.util.Log
 import app.sargis.khlopuzyan.news.rss.feed.App
 import java.io.*
 import java.net.HttpURLConnection
@@ -28,10 +29,26 @@ class CacheManager {
                     connection.disconnect()
                 }
 
+                Thread.sleep(4000)
+
+                Log.e("LOG_TAG", "searchNewsDetails: 2.1")
                 return fileName
             }
 
+            Log.e("LOG_TAG", "searchNewsDetails: 2.2")
             return null
+        }
+
+        fun deleteFile(guid: String?, url: String?): Boolean {
+            guid?.let {
+                val fileName = generateUrlFromGUID(guid)
+                fileName?.let {
+                    if (isCacheAvailable(fileName)) {
+                        return File(fileName).delete()
+                    }
+                }
+            }
+            return false
         }
 
         private fun writeToFileInInternalStorage(guid: String, data: String): String? {
@@ -75,7 +92,7 @@ class CacheManager {
             }
         }
 
-        fun isCacheAvailable(fileName: String): Boolean {
+        private fun isCacheAvailable(fileName: String): Boolean {
             return File(fileName).exists()
         }
     }

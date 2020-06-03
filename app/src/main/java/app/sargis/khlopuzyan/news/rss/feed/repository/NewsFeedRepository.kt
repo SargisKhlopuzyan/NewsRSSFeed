@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.repository
 
+import android.util.Log
 import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.model.NewsFeed
@@ -14,8 +15,6 @@ import kotlinx.coroutines.withContext
 interface NewsFeedRepository {
 
     suspend fun searchNewsFeed(): Result<NewsFeed>
-
-//    suspend fun cacheNewsDetail(item: Item?): String?
 
     suspend fun saveNewsInCache(item: Item): Long
 
@@ -42,31 +41,35 @@ class NewsFeedRepositoryImpl(
             }
         }
 
-    override suspend fun saveNewsInCache(item: Item): Long {
+    override suspend fun saveNewsInCache(_item: Item): Long {
+
+        val item = _item.copy()
         item.cacheState = CacheState.Cached
-        val archive = cacheNewsDetail(item)
-        return if (archive.isNullOrBlank()) {
+        val newDetails = CacheManager.downloadFile(item.guid, item.guid)
+
+        return if (newDetails.isNullOrBlank()) {
             -1
         } else {
             val id = databaseManager.saveNewsInDatabase(item)
+            //TODO
             if (id == -1L) {
                 item.cacheState = CacheState.NotCached
-                deleteNewsDetailCache(item)
+
+                val isDeleted = CacheManager.deleteFile(item.guid, item.guid)
+                Log.e("LOG_TAG", "isDeleted: $isDeleted")
             }
             id
         }
     }
 
-    override suspend fun deleteNewsFromCache(item: Item): Int =
-        databaseManager.deleteNewsFromDatabase(item)
+    override suspend fun deleteNewsFromCache(item: Item): Int {
 
-    private fun cacheNewsDetail(item: Item?): String? {
-        return CacheManager.downloadFile(item?.guid, item?.guid)
+        val isDeletedFromDb = databaseManager.deleteNewsFromDatabase(item)
+
+        val isDeleted = CacheManager.deleteFile(item.guid, item.guid)
+        Log.e("LOG_TAG", "isDeletedFromDb: $isDeletedFromDb  ||  isDeleted: $isDeleted")
+
+        return isDeletedFromDb
     }
 
-    private fun deleteNewsDetailCache(item: Item?): Boolean {
-        //TODO
-        return true
-//        return CacheManager.downloadFile(item?.guid, item?.guid)
-    }
 }
