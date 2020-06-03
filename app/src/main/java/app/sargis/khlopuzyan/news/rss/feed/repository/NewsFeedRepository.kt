@@ -1,6 +1,5 @@
 package app.sargis.khlopuzyan.news.rss.feed.repository
 
-import android.util.Log
 import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.model.NewsFeed
@@ -13,13 +12,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 
 interface NewsFeedRepository {
-
     suspend fun searchNewsFeed(): Result<NewsFeed>
-
     suspend fun saveNewsInCache(item: Item): Long
-
-    suspend fun deleteNewsFromCache(item: Item): Int
-
+    fun deleteNewsFromCache(item: Item): Int
 }
 
 /**
@@ -42,34 +37,32 @@ class NewsFeedRepositoryImpl(
         }
 
     override suspend fun saveNewsInCache(_item: Item): Long {
+        _item.guid?.let {
+            val item = _item.copy()
+            item.cacheState = CacheState.Cached
+            val newDetails = CacheManager.downloadFile(it, item.guid)
 
-        val item = _item.copy()
-        item.cacheState = CacheState.Cached
-        val newDetails = CacheManager.downloadFile(item.guid, item.guid)
-
-        return if (newDetails.isNullOrBlank()) {
-            -1
-        } else {
-            val id = databaseManager.saveNewsInDatabase(item)
-            //TODO
-            if (id == -1L) {
-                item.cacheState = CacheState.NotCached
-
-                val isDeleted = CacheManager.deleteFile(item.guid, item.guid)
-                Log.e("LOG_TAG", "isDeleted: $isDeleted")
+            return if (newDetails.isNullOrBlank()) {
+                -1
+            } else {
+                val id = databaseManager.saveNewsInDatabase(item)
+                if (id == -1L) {
+                    item.cacheState = CacheState.NotCached
+                    CacheManager.deleteFile(it)
+                }
+                id
             }
-            id
         }
+        return -1
     }
 
-    override suspend fun deleteNewsFromCache(item: Item): Int {
-
-        val isDeletedFromDb = databaseManager.deleteNewsFromDatabase(item)
-
-        val isDeleted = CacheManager.deleteFile(item.guid, item.guid)
-        Log.e("LOG_TAG", "isDeletedFromDb: $isDeletedFromDb  ||  isDeleted: $isDeleted")
-
-        return isDeletedFromDb
+    override fun deleteNewsFromCache(item: Item): Int {
+        item.guid?.let {
+            val isDeletedFromDb = databaseManager.deleteNewsFromDatabase(item)
+            CacheManager.deleteFile(it)
+            return isDeletedFromDb
+        }
+        return -1
     }
 
 }

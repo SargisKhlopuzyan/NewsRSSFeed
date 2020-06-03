@@ -3,12 +3,13 @@ package app.sargis.khlopuzyan.news.rss.feed.repository
 import androidx.lifecycle.LiveData
 import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
+import app.sargis.khlopuzyan.news.rss.feed.util.CacheManager
 
 interface ArchiveRepository {
 
     fun getAllArchiveNewsLiveData(): LiveData<List<Item>?>
 
-    suspend fun deleteNewsFromCache(item: Item): Int
+    fun deleteNewsFromCache(item: Item): Int
 }
 
 /**
@@ -22,7 +23,12 @@ class ArchiveRepositoryImpl(
         return databaseManager.getAllArchiveNewsLiveDataFromDatabase()
     }
 
-    override suspend fun deleteNewsFromCache(item: Item): Int =
-        databaseManager.deleteNewsFromDatabase(item)
-
+    override fun deleteNewsFromCache(item: Item): Int {
+        item.guid?.let {
+            val isDeletedFromDb = databaseManager.deleteNewsFromDatabase(item)
+            CacheManager.deleteFile(it)
+            return isDeletedFromDb
+        }
+        return -1
+    }
 }

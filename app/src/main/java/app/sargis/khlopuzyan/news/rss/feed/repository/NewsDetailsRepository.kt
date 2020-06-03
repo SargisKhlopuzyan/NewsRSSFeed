@@ -26,7 +26,13 @@ class NewsDetailsRepositoryImpl(
     }
 
     override fun deleteNewsFromCache(item: Item): Int {
-        return databaseManager.deleteNewsFromDatabase(item)
+
+        item.guid?.let {
+            val isDeletedFromDb = databaseManager.deleteNewsFromDatabase(item)
+            CacheManager.deleteFile(it)
+            return isDeletedFromDb
+        }
+        return -1
     }
 
 }

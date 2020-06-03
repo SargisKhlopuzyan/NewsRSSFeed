@@ -1,8 +1,5 @@
 package app.sargis.khlopuzyan.news.rss.feed.util
 
-import android.content.Context
-import android.os.StrictMode
-import android.util.Log
 import app.sargis.khlopuzyan.news.rss.feed.App
 import java.io.*
 import java.net.HttpURLConnection
@@ -12,50 +9,39 @@ class CacheManager {
 
     companion object {
 
-        fun downloadFile(guid: String?, url: String?): String? {
-
-            guid?.let {
-                val connection = URL(url).openConnection() as HttpURLConnection
-
-                val policy: StrictMode.ThreadPolicy =
-                    StrictMode.ThreadPolicy.Builder().permitAll().build();
-                StrictMode.setThreadPolicy(policy)
-
-                var fileName: String? = null
-                try {
-                    val data = connection.inputStream.bufferedReader().use { it.readText() }
-                    fileName = writeToFileInInternalStorage(guid, data)
-                } finally {
-                    connection.disconnect()
-                }
-
-                Thread.sleep(4000)
-
-                Log.e("LOG_TAG", "searchNewsDetails: 2.1")
-                return fileName
+        fun downloadFile(guid: String, url: String?): String? {
+            val connection = URL(url).openConnection() as HttpURLConnection
+            val fileName: String?
+            try {
+                val data = connection.inputStream.bufferedReader().use { it.readText() }
+                fileName = writeToFileInInternalStorage(guid, data)
+            } finally {
+                connection.disconnect()
             }
-
-            Log.e("LOG_TAG", "searchNewsDetails: 2.2")
-            return null
+            return fileName
         }
 
-        fun deleteFile(guid: String?, url: String?): Boolean {
-            guid?.let {
-                val fileName = generateUrlFromGUID(guid)
-                fileName?.let {
-                    if (isCacheAvailable(fileName)) {
-                        return File(fileName).delete()
-                    }
-                }
-            }
-            return false
+        fun deleteFile(guid: String): Boolean {
+            val cacheDir = getCacheFileDir()
+            val fileName = generateFileCacheNameFromGUID(guid)
+            val file = getFileCacheAbsolutePath(cacheDir, fileName)
+            return File(file).delete()
         }
 
         private fun writeToFileInInternalStorage(guid: String, data: String): String? {
-            val fileName = generateUrlFromGUID(guid)
+
+            val cacheDir = getCacheFileDir()
+
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs()
+            }
+
+            val fileName = generateFileCacheNameFromGUID(guid)
+            val file = getFileCacheAbsolutePath(cacheDir, fileName)
+
             val fileOutputStream: FileOutputStream
             return try {
-                fileOutputStream = App.getContext().openFileOutput(fileName, Context.MODE_PRIVATE)
+                fileOutputStream = FileOutputStream(file)
                 fileOutputStream.write(data.toByteArray())
                 fileName
             } catch (e: Exception) {
@@ -63,37 +49,42 @@ class CacheManager {
             }
         }
 
-        private fun generateUrlFromGUID(guid: String?): String? {
-//            var name = guid?.substringBeforeLast("/")?.substringAfterLast("/")
-            var name = guid?.substringBeforeLast("/")
-            name = name?.substringAfterLast("/")
-            return name
+        private fun generateFileCacheNameFromGUID(guid: String): String? {
+            return guid.substringBeforeLast("/").substringAfterLast("/")
         }
 
+        private fun getCacheFileDir(): File {
+            val root: String = App.getContext().getExternalFilesDir(null).toString()
+            return File("$root/rss")
+        }
+
+        private fun getFileCacheAbsolutePath(dir: File, fileName: String?): String {
+            return "$dir/${fileName}.txt"
+        }
 
         fun readFileContentFromInternalStorage(guid: String?): String? {
-            val fileName = generateUrlFromGUID(guid)
 
-            try {
-                val fileInputStream: FileInputStream? = App.getContext().openFileInput(fileName)
-                val inputStreamReader = InputStreamReader(fileInputStream as InputStream)
-                val bufferedReader = BufferedReader(inputStreamReader)
-                val stringBuilder: StringBuilder = StringBuilder()
-                var text: String? = null
+            guid?.let {
+                val fileName = generateFileCacheNameFromGUID(guid)
 
-                while ({ text = bufferedReader.readLine(); text }() != null) {
-                    stringBuilder.append(text)
+                try {
+                    val fileInputStream: FileInputStream? = App.getContext().openFileInput(fileName)
+                    val inputStreamReader = InputStreamReader(fileInputStream as InputStream)
+                    val bufferedReader = BufferedReader(inputStreamReader)
+                    val stringBuilder: StringBuilder = StringBuilder()
+                    var text: String? = null
+
+                    while ({ text = bufferedReader.readLine(); text }() != null) {
+                        stringBuilder.append(text)
+                    }
+
+                    return stringBuilder.toString()
+
+                } catch (e: FileNotFoundException) {
                 }
-
-                return stringBuilder.toString()
-
-            } catch (e: FileNotFoundException) {
-                return null
             }
-        }
 
-        private fun isCacheAvailable(fileName: String): Boolean {
-            return File(fileName).exists()
+            return null
         }
     }
 }

@@ -1,6 +1,5 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -56,9 +55,6 @@ class NewsFeedViewModel constructor(
      * Handles caching icon click
      * */
     fun onCachingActionClick(item: Item?) {
-
-        Log.e("LOG_TAG", "onCachingActionClick: ${item?.cacheState}")
-
         when (item?.cacheState) {
             CacheState.NotCached -> {
                 saveItemInCache(item)
@@ -142,13 +138,11 @@ class NewsFeedViewModel constructor(
      * @param item news to delete from cache
      * */
     private fun deleteNewsFromCache(item: Item) {
-        viewModelScope.launch {
-            val index: Int = newsFeedLiveData.value?.indexOf(item) ?: -1
-            if (index != -1) {
-                setNewsCachingState(item, index, CacheState.InProcess)
-                newsFeedRepository.deleteNewsFromCache(item)
-                setNewsCachingState(item, index, CacheState.NotCached)
-            }
+        val index: Int = newsFeedLiveData.value?.indexOf(item) ?: -1
+        if (index != -1) {
+            setNewsCachingState(item, index, CacheState.InProcess)
+            newsFeedRepository.deleteNewsFromCache(item)
+            setNewsCachingState(item, index, CacheState.NotCached)
         }
     }
 
