@@ -48,10 +48,6 @@ class ArchiveAdapter(
         notifyDataSetChanged()
     }
 
-    override fun setDataLoadingState(dataLoadingState: DataLoadingState?) {
-
-    }
-
     class ViewHolder(binding: LayoutRecyclerViewItemArchiveBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

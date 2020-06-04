@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="androidx.swiperefreshlayout.widget.SwipeRefreshLayout" />
+
+        <import type="app.sargis.khlopuzyan.news.rss.feed.util.DataLoadingState" />
 
         <variable
             name="viewModel"
@@ -17,16 +22,42 @@
         android:background="@android:color/white"
         tools:context=".ui.top_albums.TopAlbumsFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:fillViewport="true"
-            app:data="@{viewModel.newsFeedLiveData}"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:setDataLoadingState="@{viewModel.dataLoadingStateLiveData}" />
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:clipToPadding="false"
+            app:isEnabled="@{viewModel.dataLoadingStateLiveData}"
+            app:onRefreshListener="@{() -> viewModel.onRefresh()}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/layoutLoading"
+                    layout="@layout/layout_loading"
+                    bind:viewModel="@{viewModel}" />
+
+                <include
+                    android:id="@+id/layoutNetworkError"
+                    layout="@layout/layout_network_error"
+                    bind:viewModel="@{viewModel}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true"
+                    app:data="@{viewModel.newsFeedLiveData}"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            </LinearLayout>
+
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

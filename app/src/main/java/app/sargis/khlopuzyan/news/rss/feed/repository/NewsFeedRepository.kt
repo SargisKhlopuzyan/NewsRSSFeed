@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.repository
 
+import androidx.lifecycle.LiveData
 import app.sargis.khlopuzyan.news.rss.feed.database.DatabaseManager
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.model.NewsFeed
@@ -14,7 +15,9 @@ import kotlinx.coroutines.withContext
 interface NewsFeedRepository {
     suspend fun searchNewsFeed(): Result<NewsFeed>
     suspend fun saveNewsInCache(item: Item): Long
+
     fun deleteNewsFromCache(item: Item): Int
+    fun getAllArchiveNewsLiveData(): LiveData<List<Item>?>
 }
 
 /**
@@ -63,6 +66,10 @@ class NewsFeedRepositoryImpl(
             return isDeletedFromDb
         }
         return -1
+    }
+
+    override fun getAllArchiveNewsLiveData(): LiveData<List<Item>?> {
+        return databaseManager.getAllArchiveNewsLiveDataFromDatabase()
     }
 
 }

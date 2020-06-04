@@ -6,9 +6,7 @@ import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.util.CacheManager
 
 interface ArchiveRepository {
-
     fun getAllArchiveNewsLiveData(): LiveData<List<Item>?>
-
     fun deleteNewsFromCache(item: Item): Int
 }
 

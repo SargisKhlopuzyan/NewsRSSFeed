@@ -68,7 +68,6 @@ data class Item(
     @Json(name = "description")
     var description: String? = null,
 
-    // TODO Uncomment
     @Json(name = "enclosure")
     val enclosure: Enclosure? = null,
 

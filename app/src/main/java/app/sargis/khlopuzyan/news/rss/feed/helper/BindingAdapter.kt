@@ -2,13 +2,15 @@ package app.sargis.khlopuzyan.news.rss.feed.helper
 
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.util.Log
+import android.view.View
 import android.webkit.WebView
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.BindableAdapter
@@ -24,20 +26,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
-
 @BindingAdapter("data")
 fun <T> RecyclerView.setRecyclerViewData(items: T?) {
     if (adapter is BindableAdapter<*>) {
         @Suppress("UNCHECKED_CAST")
         (adapter as BindableAdapter<T>).setItems(items)
-    }
-}
-
-@BindingAdapter("setDataLoadingState")
-fun <T> RecyclerView.setDataLoadingState(dataLoadingState: DataLoadingState?) {
-    if (adapter is BindableAdapter<*>) {
-        @Suppress("UNCHECKED_CAST")
-        (adapter as BindableAdapter<T>).setDataLoadingState(dataLoadingState)
     }
 }
 
@@ -50,9 +43,7 @@ fun WebView.loadDataFromCacheOrUrl(item: Item?) {
     } else {
         this.settings.javaScriptEnabled = true
         this.loadDataWithBaseURL(null, cache, "text/html", "utf-8", null)
-//        this.loadData(cache, "text/html", "utf-8")
     }
-
 }
 
 @BindingAdapter("content")
@@ -109,20 +100,41 @@ fun ImageView.setImageResource(resource: String?) {
 fun LottieAnimationView.setItemCacheState(item: Item?) {
     when (item?.cacheState) {
         CacheState.Cached -> {
-            Log.e("LOG_TAG", "CacheState.Cached")
             repeatCount = LottieDrawable.INFINITE
             setImageResource(R.drawable.ic_saved)
         }
         CacheState.InProcess -> {
-            Log.e("LOG_TAG", "CacheState.InProcess")
             repeatCount = LottieDrawable.RESTART
             setAnimation("loading.json")
             playAnimation()
         }
         CacheState.NotCached -> {
-            Log.e("LOG_TAG", "CacheState.NotCached")
             repeatCount = LottieDrawable.INFINITE
             setImageResource(R.drawable.ic_save)
         }
+    }
+}
+
+@BindingAdapter("isEnabled")
+fun SwipeRefreshLayout.isEnabled(dataLoadingState: DataLoadingState?) {
+    this.isRefreshing = false
+    this.isEnabled = dataLoadingState != null && dataLoadingState is DataLoadingState.Loaded
+}
+
+@BindingAdapter("errorVisibility")
+fun LinearLayout.errorVisibility(dataLoadingState: DataLoadingState?) {
+    if (dataLoadingState != null && dataLoadingState is DataLoadingState.Failure) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("loadingVisibility")
+fun LinearLayout.loadingVisibility(dataLoadingState: DataLoadingState?) {
+    if (dataLoadingState != null && dataLoadingState is DataLoadingState.Loading) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
     }
 }

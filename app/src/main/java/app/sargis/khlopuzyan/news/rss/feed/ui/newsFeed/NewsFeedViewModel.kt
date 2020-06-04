@@ -24,6 +24,8 @@ class NewsFeedViewModel constructor(
     val dataLoadingStateLiveData = MutableLiveData<DataLoadingState>()
     val errorMessageLiveData = MutableLiveData<String>()
 
+    var archiveNewsLiveData = newsFeedRepository.getAllArchiveNewsLiveData()
+
     init {
         searchMoreNews()
     }
@@ -36,10 +38,17 @@ class NewsFeedViewModel constructor(
         if (newsFeed?.items == null) {
             items = mutableListOf()
         } else {
+            //TODO
+            syncWithCachedNews(newsFeed)
             items = newsFeedLiveData.value
             items?.addAll(newsFeed.items)
         }
         newsFeedLiveData.value = items
+    }
+
+    private fun syncWithCachedNews(newsFeed: NewsFeed?) {
+        newsFeed?.items?.let {
+        }
     }
 
     /**
@@ -74,7 +83,12 @@ class NewsFeedViewModel constructor(
         searchMoreNews()
     }
 
-    fun searchMoreNews() {
+    fun onRefresh() {
+        searchMoreNews()
+    }
+
+    private fun searchMoreNews() {
+
         viewModelScope.launch(Dispatchers.Main) {
 
             dataLoadingStateLiveData.value = DataLoadingState.Loading
@@ -102,12 +116,6 @@ class NewsFeedViewModel constructor(
             }
         }
     }
-
-    /**
-     * Checks weather api has pages available
-     * */
-    fun hasExtraRow(): Boolean =
-        (dataLoadingStateLiveData.value != null && dataLoadingStateLiveData.value != DataLoadingState.Loaded) /*|| (loadedPageIndex < availablePages)*/
 
     /**
      * Saves item in cache
