@@ -10,7 +10,6 @@ import app.sargis.khlopuzyan.news.rss.feed.R
 import app.sargis.khlopuzyan.news.rss.feed.databinding.LayoutRecyclerViewItemNewsFeedBinding
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.ui.common.BindableAdapter
-import app.sargis.khlopuzyan.news.rss.feed.util.DataLoadingState
 
 class NewsFeedAdapter(
     val viewModel: NewsFeedViewModel
@@ -37,6 +36,7 @@ class NewsFeedAdapter(
         } else {
             submitList(listOf())
         }
+        notifyDataSetChanged()
     }
 
     // ViewHolder

@@ -19,20 +19,12 @@ class DatabaseManager @Inject constructor(var context: Context) {
         return NewsDatabase.getInstance(context).getNewsDAO().getNewsById(name)
     }
 
-//    fun getAllMatchedNewsFromDatabase(name: String): List<Item> {
-//        return NewsDatabase.getInstance(context).getNewsDAO().getAllArchiveNews(name)
-//    }
-
     fun getAllArchiveNewsFromDatabase(): List<Item> {
         return NewsDatabase.getInstance(context).getNewsDAO().getAllArchiveNews()
     }
 
     fun getAllArchiveNewsLiveDataFromDatabase(): LiveData<List<Item>?> {
         return NewsDatabase.getInstance(context).getNewsDAO().getAllArchiveNewsLiveData()
-    }
-
-    fun loadNewsFromDatabase(item: Item) {
-
     }
 
 }

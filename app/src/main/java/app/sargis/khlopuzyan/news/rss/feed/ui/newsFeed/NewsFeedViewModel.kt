@@ -1,5 +1,6 @@
 package app.sargis.khlopuzyan.news.rss.feed.ui.newsFeed
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,25 +31,45 @@ class NewsFeedViewModel constructor(
         searchMoreNews()
     }
 
+    fun archiveNewsChanged(archiveItems: List<Item>?) {
+        syncWithCachedNews(newsFeedLiveData.value!!)
+        newsFeedLiveData.value = newsFeedLiveData.value
+    }
+
+    private fun syncWithCachedNews(newsItems: MutableList<Item>) {
+        archiveNewsLiveData.value?.let { archivedItems ->
+
+            for (newsItem in newsItems) {
+                when {
+                    archivedItems.contains(newsItem) -> {
+                        newsItem.cacheState = CacheState.Cached
+                    }
+                    newsItem.cacheState == CacheState.Cached -> {
+                        newsItem.cacheState = CacheState.NotCached
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Handles search result
      * */
     private fun handleSearchResult(newsFeed: NewsFeed?) {
-        val items: MutableList<Item>?
+        val items: MutableList<Item>
         if (newsFeed?.items == null) {
             items = mutableListOf()
         } else {
-            //TODO
-            syncWithCachedNews(newsFeed)
-            items = newsFeedLiveData.value
-            items?.addAll(newsFeed.items)
+            items = newsFeedLiveData.value!!.toMutableList()
+//            TODO
+//            syncWithCachedNews(items)
+            items.addAll(newsFeed.items)
         }
-        newsFeedLiveData.value = items
-    }
 
-    private fun syncWithCachedNews(newsFeed: NewsFeed?) {
-        newsFeed?.items?.let {
-        }
+        syncWithCachedNews(items)
+        newsFeedLiveData.value = items
     }
 
     /**

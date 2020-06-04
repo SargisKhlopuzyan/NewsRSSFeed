@@ -86,7 +86,11 @@ data class Item(
     @Json(name = "title")
     var title: String? = null
 
-) : Parcelable
+) : Parcelable {
+    override fun equals(other: Any?): Boolean {
+        return other != null && other is Item && other.guid == guid
+    }
+}
 
 @JsonClass(generateAdapter = true)
 @Parcelize
