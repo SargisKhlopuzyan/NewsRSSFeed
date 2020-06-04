@@ -5,6 +5,9 @@ import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.sargis.khlopuzyan.news.rss.feed.App
+import app.sargis.khlopuzyan.news.rss.feed.constant.SharedPrefConst
+import app.sargis.khlopuzyan.news.rss.feed.datastorage.SharedPrefUtils
 import app.sargis.khlopuzyan.news.rss.feed.helper.SingleLiveEvent
 import app.sargis.khlopuzyan.news.rss.feed.model.Item
 import app.sargis.khlopuzyan.news.rss.feed.model.NewsFeed
@@ -14,6 +17,7 @@ import app.sargis.khlopuzyan.news.rss.feed.util.CacheState
 import app.sargis.khlopuzyan.news.rss.feed.util.DataLoadingState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class NewsFeedViewModel constructor(
     private val newsFeedRepository: NewsFeedRepository
@@ -58,18 +62,51 @@ class NewsFeedViewModel constructor(
      * Handles search result
      * */
     private fun handleSearchResult(newsFeed: NewsFeed?) {
-        val items: MutableList<Item>
-        if (newsFeed?.items == null) {
-            items = mutableListOf()
-        } else {
-            items = newsFeedLiveData.value!!.toMutableList()
+
+        val lastPubDate =
+            SharedPrefUtils(App.getContext()).loadStringFromPreference(SharedPrefConst.LAST_PUB_DATE)
+        val newNewsList: List<Item> = newsFeed?.items ?: return
+
+        val items: MutableList<Item> = newsFeedLiveData.value!!.toMutableList()
+
+        for (item in newNewsList) {
+            Log.e("LOG_TAG", "***** item.pubDate : ${item.pubDate}")
+            item.pubDate?.let {
+                if (checkIsNewsNew(it, lastPubDate)) {
+                    items.add(item)
+                    Log.e("LOG_TAG", "***** add : ${newNewsList.size}")
+                } else {
+                    Log.e("LOG_TAG", "***** miss : ${newNewsList.size}")
+                }
+            }
+        }
+
+        newNewsList[0].pubDate?.let {
+            SharedPrefUtils(App.getContext()).storeStringInPreference(
+                SharedPrefConst.LAST_PUB_DATE,
+                it
+            )
+        }
+
 //            TODO
 //            syncWithCachedNews(items)
-            items.addAll(newsFeed.items)
-        }
+//        items.addAll(newsFeed.items)
 
         syncWithCachedNews(items)
         newsFeedLiveData.value = items
+    }
+
+    private fun checkIsNewsNew(pubDateStr: String, lastPubDateStr: String?): Boolean {
+
+        if (lastPubDateStr == null) {
+            return true
+        }
+
+//        2020-06-04 10:45:24
+        val lastPubDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(lastPubDateStr)
+        val pubDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(pubDateStr)
+
+        return pubDate.after(lastPubDate)
     }
 
     /**
